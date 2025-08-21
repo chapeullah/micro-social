@@ -1,0 +1,49 @@
+services:
+  gateway:
+    build: ./gateway
+    ports:
+      - "8080:8080"
+    depends_on: [auth-service, profile-service, posts-service, notification-service]
+
+  auth-service:
+    build: ./auth-service
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/authdb
+      SPRING_DATASOURCE_USERNAME: auth_user
+      SPRING_DATASOURCE_PASSWORD: auth_pass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      - postgres
+
+  profile-service:
+    build: ./profile-service
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/profilesdb
+      SPRING_DATASOURCE_USERNAME: profile_user
+      SPRING_DATASOURCE_PASSWORD: profile_pass
+    depends_on:
+      - postgres
+
+  posts-service:
+    build: ./posts-service
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postsdb
+      SPRING_DATASOURCE_USERNAME: posts_user
+      SPRING_DATASOURCE_PASSWORD: posts_pass
+    depends_on:
+      - postgres
+
+  notification-service:
+    build: ./notification-service
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql

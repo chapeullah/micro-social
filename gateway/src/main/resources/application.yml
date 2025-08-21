@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: auth-service
+              uri: http://auth-service:8080
+              predicates:
+                - Path=/auth/**
+
+            - id: profile-service
+              uri: http://profile-service:8080
+              predicates:
+                - Path=/profile/**
+
+            - id: posts-service
+              uri: http://posts-service:8080
+              predicates:
+                - Path=/posts/**
+
+            - id: notification-service
+              uri: http://notification-service:8080
+              predicates:
+                - Path=/notification/**
