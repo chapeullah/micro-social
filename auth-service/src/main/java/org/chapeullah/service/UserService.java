@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     public UserResponse register(String username, String email, String password) {
@@ -25,7 +27,7 @@ public class UserService {
         String passwordHash = passwordEncoder.encode(password);
         User user = new User(username, email, passwordHash);
         user = userRepository.save(user);
-        return UserResponse.from(user);
+        return UserResponse.from(user, jwtService.generate(user.getId()));
     }
 
     public UserResponse login(String email, String password) {
@@ -34,6 +36,6 @@ public class UserService {
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             throw new InvalidCredentialsException();
         }
-        return UserResponse.from(user);
+        return UserResponse.from(user, jwtService.generate(user.getId()));
     }
 }
