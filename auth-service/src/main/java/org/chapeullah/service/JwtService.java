@@ -3,11 +3,11 @@ package org.chapeullah.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.chapeullah.exception.InvalidJwtTokenException;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 
@@ -28,7 +28,7 @@ public class JwtService {
         final long now = System.currentTimeMillis();
         return Jwts.builder()
                 .subject(String.valueOf(userId))
-                .issuedAt(new Date(now))
+                .issuedAt(new Date())
                 .expiration(new Date(now + ACCESS_MS))
                 .signWith(secretKey)
                 .compact();
@@ -38,12 +38,12 @@ public class JwtService {
         try {
             Claims claims = extractClaims(token);
             if (claims.getExpiration().before(new Date())) {
-                throw new IllegalStateException("Token expired");
+                throw new InvalidJwtTokenException("token expired");
             }
             return Integer.valueOf(claims.getSubject());
         }
         catch (Exception exception) {
-            throw new IllegalStateException("Invalid JWT token", exception);
+            throw new InvalidJwtTokenException("invalid jwt token");
         }
     }
 
@@ -54,7 +54,5 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload();
     }
-
-
 
 }

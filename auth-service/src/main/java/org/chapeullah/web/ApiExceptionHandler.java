@@ -27,4 +27,12 @@ public class ApiExceptionHandler {
         return Map.of("message", exception.getMessage());
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Map<String, Object> handleIllegalState(
+            IllegalStateException exception
+    ) {
+        return Map.of("message", exception.getMessage());
+    }
+
 }
