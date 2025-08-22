@@ -4,11 +4,12 @@ import org.chapeullah.entity.User;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.TimeZone;
+
 @SpringBootApplication
 public class AuthService {
     public static void main(String[] args) {
-
-        int[] C = new int[4];
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Moscow"));
         SpringApplication.run(AuthService.class, args);
     }
 }

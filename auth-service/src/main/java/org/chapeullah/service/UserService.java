@@ -20,13 +20,15 @@ public class UserService {
         this.jwtService = jwtService;
     }
 
-    public UserResponse register(String username, String email, String password) {
+    public UserResponse register(String email, String password) {
         if (userRepository.existsByEmail(email)) {
-            throw new DuplicateUserException();
+            throw new DuplicateUserException("user is already exists");
+        }
+        if (password.length() < 12) {
+            throw new InvalidCredentialsException("password must be at least 12 characters long");
         }
         String passwordHash = passwordEncoder.encode(password);
-        User user = new User(username, email, passwordHash);
-        user = userRepository.save(user);
+        User user = userRepository.save(new User(email, passwordHash));
         return UserResponse.from(user, jwtService.generate(user.getId()));
     }
 

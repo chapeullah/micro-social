@@ -15,9 +15,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
-    private String username;
-
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -29,8 +26,7 @@ public class User {
 
     protected User() {}
 
-    public User(String username, String email, String passwordHash) {
-        this.username = username;
+    public User(String email, String passwordHash) {
         this.email = email;
         this.passwordHash = passwordHash;
     }

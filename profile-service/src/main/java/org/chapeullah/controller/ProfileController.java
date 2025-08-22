@@ -6,14 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/profile")
-public class HelloController {
-    @GetMapping("/")
-    public String noPath() {
-        return "ProfileService";
-    }
+public class ProfileController {
 
-    @GetMapping("/hello")
-    public String hello() {
-        return "ProfileService: Hello!";
-    }
+
+
 }

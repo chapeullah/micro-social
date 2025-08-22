@@ -26,14 +26,12 @@ public class JwtService {
 
     public String generate(Integer userId) {
         final long now = System.currentTimeMillis();
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .subject(String.valueOf(userId))
                 .issuedAt(new Date())
                 .expiration(new Date(now + ACCESS_MS))
                 .signWith(secretKey)
                 .compact();
-        System.out.println(token);
-        return token;
     }
 
     public Integer validateAndExtractUserId(String token) {
