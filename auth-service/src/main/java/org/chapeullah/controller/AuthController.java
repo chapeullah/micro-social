@@ -1,6 +1,7 @@
 package org.chapeullah.controller;
 
 import jakarta.validation.Valid;
+import org.chapeullah.dto.ChangePasswordRequest;
 import org.chapeullah.dto.LoginRequest;
 import org.chapeullah.dto.RegisterRequest;
 import org.chapeullah.dto.UserResponse;
@@ -29,6 +30,17 @@ public class AuthController {
         return userService.login(
                 loginRequest.email(),
                 loginRequest.password()
+        );
+    }
+
+    @PostMapping("/change-password")
+    public void changePassword(
+            @Valid @RequestBody ChangePasswordRequest changePasswordRequest
+    ) {
+        userService.changePassword(
+                changePasswordRequest.jwtToken(),
+                changePasswordRequest.oldPassword(),
+                changePasswordRequest.newPassword()
         );
     }
 }
