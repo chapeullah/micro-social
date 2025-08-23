@@ -24,7 +24,7 @@ public class JwtService {
         this.secretKey = Keys.hmacShaKeyFor(jwtSecretBytes);
     }
 
-    public String generate(Integer userId) {
+    public String generateJwtToken(Integer userId) {
         final long now = System.currentTimeMillis();
         return Jwts.builder()
                 .subject(String.valueOf(userId))
@@ -34,9 +34,9 @@ public class JwtService {
                 .compact();
     }
 
-    public Integer validateAndExtractUserId(String token) {
+    public Integer validateAndExtractUserId(String jwtToken) {
         try {
-            Claims claims = extractClaims(token);
+            Claims claims = extractClaims(jwtToken);
             if (claims.getExpiration().before(new Date())) {
                 throw new InvalidJwtTokenException("token expired");
             }
@@ -47,11 +47,11 @@ public class JwtService {
         }
     }
 
-    private Claims extractClaims(String token) {
+    private Claims extractClaims(String jwtToken) {
         return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
-                .parseSignedClaims(token)
+                .parseSignedClaims(jwtToken)
                 .getPayload();
     }
 

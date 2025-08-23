@@ -16,7 +16,11 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+    public UserService(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            JwtService jwtService
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
@@ -32,7 +36,7 @@ public class UserService {
         }
         String passwordHash = passwordEncoder.encode(password);
         User user = userRepository.save(new User(email, passwordHash));
-        return UserResponse.from(user, jwtService.generate(user.getId()));
+        return UserResponse.from(user, jwtService.generateJwtToken(user.getId()));
     }
 
     @Transactional
@@ -42,7 +46,7 @@ public class UserService {
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             throw new InvalidCredentialsException();
         }
-        return UserResponse.from(user, jwtService.generate(user.getId()));
+        return UserResponse.from(user, jwtService.generateJwtToken(user.getId()));
     }
 
     @Transactional
@@ -61,7 +65,9 @@ public class UserService {
             throw new InvalidCredentialsException();
         }
         if (passwordEncoder.matches(newPassword, user.getPasswordHash())) {
-            throw new InvalidCredentialsException("new password must be different from the current one");
+            throw new InvalidCredentialsException(
+                    "new password must be different from the current one"
+            );
         }
         user.setPasswordHash(passwordEncoder.encode(newPassword));
         userRepository.save(user);
