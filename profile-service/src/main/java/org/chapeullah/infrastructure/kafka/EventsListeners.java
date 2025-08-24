@@ -1,6 +1,8 @@
 package org.chapeullah.infrastructure.kafka;
 
 import org.chapeullah.UserRegistered;
+import org.chapeullah.entity.Profile;
+import org.chapeullah.service.ProfileService;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -18,8 +20,15 @@ import org.springframework.stereotype.Component;
 )
 public class EventsListeners {
 
+    ProfileService profileService;
+
+    public EventsListeners(ProfileService profileService) {
+        this.profileService = profileService;
+    }
+
     @KafkaHandler
     public void onUserRegistered(UserRegistered userRegistered) {
-        System.out.println("Пользователь зарегистрирован :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) ");
+        profileService.create(new Profile(userRegistered));
     }
+
 }

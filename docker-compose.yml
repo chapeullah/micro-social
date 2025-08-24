@@ -29,6 +29,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/profilesdb
       SPRING_DATASOURCE_USERNAME: profile_user
       SPRING_DATASOURCE_PASSWORD: profile_pass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
 
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
 

@@ -40,16 +40,16 @@ public class UserService {
         }
         String passwordHash = passwordEncoder.encode(password);
         User user = userRepository.save(new User(email, passwordHash));
-        eventsProducer.userRegistered(user.getId());
+        eventsProducer.userRegistered(user.getId(), user.getRegisterDate());
         return UserResponse.from(user, jwtService.generateJwtToken(user.getId()));
     }
 
     @Transactional
     public UserResponse login(String email, String password) {
         User user = userRepository.findByEmail(email)
-            .orElseThrow(InvalidCredentialsException::new);
+            .orElseThrow(() -> new InvalidCredentialsException("invalid email or password"));
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
-            throw new InvalidCredentialsException();
+            throw new InvalidCredentialsException("invalid email or password");
         }
         return UserResponse.from(user, jwtService.generateJwtToken(user.getId()));
     }
@@ -60,18 +60,18 @@ public class UserService {
             String oldPassword,
             String newPassword
     ) {
-        if (oldPassword.length() < 12 || newPassword.length() < 12) {
+        if (newPassword.length() < 12) {
             throw new InvalidCredentialsException("password must be at least 12 characters long");
         }
         User user = userRepository
                 .findById(jwtService.validateAndExtractUserId(jwtToken))
                 .orElseThrow(() -> new InvalidJwtTokenException("invalid JWT token"));
-        if (!passwordEncoder.matches(oldPassword, user.getPasswordHash())) {
-            throw new InvalidCredentialsException();
+        if (oldPassword.length() < 12 || !passwordEncoder.matches(oldPassword, user.getPasswordHash())) {
+            throw new InvalidCredentialsException("old password does not match");
         }
         if (passwordEncoder.matches(newPassword, user.getPasswordHash())) {
             throw new InvalidCredentialsException(
-                    "new password must be different from the current one"
+                    "new password must be different from the old one"
             );
         }
         user.setPasswordHash(passwordEncoder.encode(newPassword));

@@ -4,13 +4,14 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(name = "users")
 @Setter
 @Getter
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -22,20 +23,14 @@ public class User {
     private String passwordHash;
 
     @Column(nullable = false)
-    private LocalDateTime registerDate;
+    private Instant registerDate;
 
     protected User() {}
 
     public User(String email, String passwordHash) {
         this.email = email;
         this.passwordHash = passwordHash;
-    }
-
-    @PrePersist
-    private void prePersist() {
-        if (this.registerDate == null) {
-            this.registerDate = LocalDateTime.now();
-        }
+        this.registerDate = Instant.now();
     }
 
 }
