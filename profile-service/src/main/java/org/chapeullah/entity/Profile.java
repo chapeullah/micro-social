@@ -35,6 +35,8 @@ public class Profile {
     @Column
     private String locationCity;
 
+    protected Profile() {}
+
     public Profile(UserRegistered userRegistered) {
         this.userId = userRegistered.userId();
         this.registeredAt = userRegistered.registeredDate();
