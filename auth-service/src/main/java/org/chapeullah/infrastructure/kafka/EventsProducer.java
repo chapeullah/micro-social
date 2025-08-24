@@ -17,7 +17,6 @@ public class EventsProducer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void userRegistered(int userId) {
         UserRegistered userRegistered = new UserRegistered(userId, Instant.now());
         kafkaTemplate.send(AUTH_EVENTS_TOPIC, String.valueOf(userId), userRegistered);

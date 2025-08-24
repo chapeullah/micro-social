@@ -19,7 +19,6 @@ services:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_KAFKA_PRODUCER_KEY_SERIALIZER: org.apache.kafka.common.serialization.StringSerializer
       SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER: org.springframework.kafka.support.serializer.JsonSerializer
-      SPRING_KAFKA_PRODUCER_PROPERTIES_SPRING_JSON_TRUSTED_PACKAGES: org.chapeullah.*
 
     depends_on: [postgres, kafka]
 
@@ -32,10 +31,6 @@ services:
       SPRING_DATASOURCE_PASSWORD: profile_pass
 
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      SPRING_KAFKA_CONSUMER_GROUP_ID: profile-service
-      SPRING_KAFKA_PRODUCER_KEY_SERIALIZER: org.apache.kafka.common.serialization.StringSerializer
-      SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER: org.springframework.kafka.support.serializer.JsonSerializer
-      SPRING_KAFKA_PRODUCER_PROPERTIES_SPRING_JSON_TRUSTED_PACKAGES: org.chapeullah.*
 
     depends_on: [postgres, kafka]
 
