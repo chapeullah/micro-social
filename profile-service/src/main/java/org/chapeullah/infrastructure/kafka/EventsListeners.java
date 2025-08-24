@@ -12,6 +12,6 @@ public class EventsListeners {
             groupId = "profile-service"
     )
     public void onUserRegistered(UserRegistered userRegistered) {
-        System.out.println("Пользователь зарегистрирован");
+        System.out.println("Пользователь зарегистрирован :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) ");
     }
 }

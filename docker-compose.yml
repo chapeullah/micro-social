@@ -13,11 +13,15 @@ services:
       SPRING_DATASOURCE_USERNAME: auth_user
       SPRING_DATASOURCE_PASSWORD: auth_pass
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      JWT_SECRET: ${JWT_SECRET}
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
 
-    depends_on:
-      - postgres
+      JWT_SECRET: ${JWT_SECRET}
+
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_KAFKA_PRODUCER_KEY_SERIALIZER: org.apache.kafka.common.serialization.StringSerializer
+      SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER: org.springframework.kafka.support.serializer.JsonSerializer
+      SPRING_KAFKA_PRODUCER_PROPERTIES_SPRING_JSON_TRUSTED_PACKAGES: org.chapeullah.*
+
+    depends_on: [postgres, kafka]
 
   profile-service:
     build: ./profile-service
@@ -27,8 +31,13 @@ services:
       SPRING_DATASOURCE_USERNAME: profile_user
       SPRING_DATASOURCE_PASSWORD: profile_pass
 
-    depends_on:
-      - postgres
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_KAFKA_CONSUMER_GROUP_ID: profile-service
+      SPRING_KAFKA_PRODUCER_KEY_SERIALIZER: org.apache.kafka.common.serialization.StringSerializer
+      SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER: org.springframework.kafka.support.serializer.JsonSerializer
+      SPRING_KAFKA_PRODUCER_PROPERTIES_SPRING_JSON_TRUSTED_PACKAGES: org.chapeullah.*
+
+    depends_on: [postgres, kafka]
 
   posts-service:
     build: ./posts-service
@@ -38,8 +47,7 @@ services:
       SPRING_DATASOURCE_USERNAME: posts_user
       SPRING_DATASOURCE_PASSWORD: posts_pass
 
-    depends_on:
-      - postgres
+    depends_on: [postgres]
 
   notification-service:
     build: ./notification-service

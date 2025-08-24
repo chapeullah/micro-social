@@ -5,6 +5,7 @@ import org.chapeullah.entity.User;
 import org.chapeullah.exception.DuplicateUserException;
 import org.chapeullah.exception.InvalidCredentialsException;
 import org.chapeullah.exception.InvalidJwtTokenException;
+import org.chapeullah.infrastructure.kafka.EventsProducer;
 import org.chapeullah.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,15 +16,18 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final EventsProducer eventsProducer;
 
     public UserService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
-            JwtService jwtService
+            JwtService jwtService,
+            EventsProducer eventsProducer
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.eventsProducer = eventsProducer;
     }
 
     @Transactional
@@ -36,6 +40,7 @@ public class UserService {
         }
         String passwordHash = passwordEncoder.encode(password);
         User user = userRepository.save(new User(email, passwordHash));
+        eventsProducer.userRegistered(user.getId());
         return UserResponse.from(user, jwtService.generateJwtToken(user.getId()));
     }
 
