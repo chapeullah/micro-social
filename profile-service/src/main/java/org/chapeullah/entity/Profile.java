@@ -43,7 +43,7 @@ public class Profile {
         this.username = generateUsername(this.userId);
     }
 
-    private String generateUsername(Integer userId) {
+    private final String generateUsername(Integer userId) {
         return String.format("User%05d", userId);
     }
 

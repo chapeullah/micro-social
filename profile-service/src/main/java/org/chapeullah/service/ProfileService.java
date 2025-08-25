@@ -14,7 +14,6 @@ public class ProfileService {
     }
 
     public void create(Profile profile) {
-        System.out.println("Профиль создан: id=" + String.valueOf(profile.getUserId()));
         profileRepository.save(profile);
     }
 

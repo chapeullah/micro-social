@@ -4,10 +4,9 @@ import org.chapeullah.entity.User;
 
 import java.time.Instant;
 
-public record UserResponse(Integer id, String email, Instant registerDate, String jwtToken) {
+public record UserResponse(String email, Instant registerDate, String jwtToken) {
     public static UserResponse from(User user, String jwtToken) {
         return new UserResponse(
-                user.getId(),
                 user.getEmail(),
                 user.getRegisterDate(),
                 jwtToken

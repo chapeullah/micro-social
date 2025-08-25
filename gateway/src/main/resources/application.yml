@@ -10,19 +10,19 @@ spring:
             - id: auth-service
               uri: http://auth-service:8080
               predicates:
-                - Path=/auth/**
+                - Path=/api/auth/**
 
             - id: profile-service
               uri: http://profile-service:8080
               predicates:
-                - Path=/profile/**
+                - Path=/api/profile/**
 
             - id: posts-service
               uri: http://posts-service:8080
               predicates:
-                - Path=/posts/**
+                - Path=/api/posts/**
 
             - id: notification-service
               uri: http://notification-service:8080
               predicates:
-                - Path=/notification/**
+                - Path=/api/notification/**

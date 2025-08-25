@@ -1,8 +1,7 @@
 services:
   gateway:
     build: ./gateway
-    ports:
-      - "8080:8080"
+    ports: ["8080:8080"]
     depends_on: [auth-service, profile-service, posts-service, notification-service]
 
   auth-service:
@@ -14,11 +13,11 @@ services:
       SPRING_DATASOURCE_PASSWORD: auth_pass
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
 
-      JWT_SECRET: ${JWT_SECRET}
-
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_KAFKA_PRODUCER_KEY_SERIALIZER: org.apache.kafka.common.serialization.StringSerializer
       SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER: org.springframework.kafka.support.serializer.JsonSerializer
+
+      JWT_SECRET: ${JWT_SECRET}
 
     depends_on: [postgres, kafka]
 
@@ -32,6 +31,8 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
 
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+
+      JWT_SECRET: ${JWT_SECRET}
 
     depends_on: [postgres, kafka]
 
@@ -70,5 +71,4 @@ services:
       KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
       KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
 
-    ports:
-      - "9092:9092"
+    ports: ["9092:9092"]

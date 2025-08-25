@@ -1,7 +1,6 @@
 package org.chapeullah.controller;
 
 import jakarta.validation.Valid;
-import org.chapeullah.dto.ChangePasswordRequest;
 import org.chapeullah.dto.LoginRequest;
 import org.chapeullah.dto.RegisterRequest;
 import org.chapeullah.dto.UserResponse;
@@ -9,7 +8,7 @@ import org.chapeullah.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth/user")
 public class AuthController {
     private final UserService userService;
 
@@ -33,14 +32,4 @@ public class AuthController {
         );
     }
 
-    @PostMapping("/change-password")
-    public void changePassword(
-            @Valid @RequestBody ChangePasswordRequest changePasswordRequest
-    ) {
-        userService.changePassword(
-                changePasswordRequest.jwtToken(),
-                changePasswordRequest.oldPassword(),
-                changePasswordRequest.newPassword()
-        );
-    }
 }

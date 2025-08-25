@@ -61,11 +61,11 @@ public class UserService {
             String newPassword
     ) {
         if (newPassword.length() < 12) {
-            throw new InvalidCredentialsException("password must be at least 12 characters long");
+            throw new InvalidCredentialsException("new password must be at least 12 characters long");
         }
         User user = userRepository
                 .findById(jwtService.validateAndExtractUserId(jwtToken))
-                .orElseThrow(() -> new InvalidJwtTokenException("invalid JWT token"));
+                .orElseThrow(() -> new InvalidJwtTokenException("invalid jwt token"));
         if (oldPassword.length() < 12 || !passwordEncoder.matches(oldPassword, user.getPasswordHash())) {
             throw new InvalidCredentialsException("old password does not match");
         }
@@ -76,5 +76,22 @@ public class UserService {
         }
         user.setPasswordHash(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void changeEmail(
+            String jwtToken,
+            String newEmail,
+            String password
+    ) {
+        User user = userRepository
+                .findById(jwtService.validateAndExtractUserId(jwtToken))
+                .orElseThrow(() -> new InvalidJwtTokenException("invalid jwt token"));
+        if (!passwordEncoder.matches(password, user.getPasswordHash())) {
+            throw new InvalidCredentialsException("invalid password");
+        }
+        user.setEmail(newEmail);
+        userRepository.save(user);
+
     }
 }

@@ -2,6 +2,7 @@ package org.chapeullah.web;
 
 import org.chapeullah.exception.DuplicateUserException;
 import org.chapeullah.exception.InvalidCredentialsException;
+import org.chapeullah.exception.InvalidJwtTokenException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -23,6 +24,14 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Map<String, Object> handleInvalidCredentials(
             InvalidCredentialsException exception
+    ) {
+        return Map.of("message", exception.getMessage());
+    }
+
+    @ExceptionHandler(InvalidJwtTokenException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Map<String, Object> handleInvalidJwtToken(
+            InvalidJwtTokenException exception
     ) {
         return Map.of("message", exception.getMessage());
     }
