@@ -92,6 +92,5 @@ public class UserService {
         }
         user.setEmail(newEmail);
         userRepository.save(user);
-
     }
 }

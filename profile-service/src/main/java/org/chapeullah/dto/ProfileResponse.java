@@ -13,7 +13,7 @@ public record ProfileResponse(
         String locationCountry,
         String locationCity
 ) {
-    public ProfileResponse from(Profile profile) {
+    public static ProfileResponse from(Profile profile) {
         return new ProfileResponse(
                 profile.getUserId(),
                 profile.getUsername(),
