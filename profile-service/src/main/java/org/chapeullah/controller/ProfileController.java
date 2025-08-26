@@ -19,31 +19,41 @@ public class ProfileController {
     }
 
     @GetMapping("/get")
-    public ProfileResponse getProfile(@RequestHeader("Authorization") String authHeader) {
+    public ProfileResponse getProfile(
+            @RequestHeader("Authorization") String authHeader
+    ) {
         return profileService.getProfileResponseByJwt(parseAuthHeader(authHeader));
     }
 
     @PostMapping("/update/username")
-    public ProfileResponse updateUsername(@RequestHeader("Authorization") String authHeader,
-                                          @Valid @RequestBody UpdateFieldRequest request) {
+    public ProfileResponse updateUsername(
+            @RequestHeader("Authorization") String authHeader,
+            @Valid @RequestBody UpdateFieldRequest request
+    ) {
         return profileService.updateUsername(parseAuthHeader(authHeader), request.field());
     }
 
     @PostMapping("/update/birthday")
-    public ProfileResponse updateBirthday(@RequestHeader("Authorization") String authHeader,
-                                          @Valid @RequestBody UpdateBirthdayRequest request) {
+    public ProfileResponse updateBirthday(
+            @RequestHeader("Authorization") String authHeader,
+            @Valid @RequestBody UpdateBirthdayRequest request
+    ) {
         return profileService.updateBirthday(parseAuthHeader(authHeader), request.birthday());
     }
 
     @PostMapping("/update/location/country")
-    public ProfileResponse updateLocationCountry(@RequestHeader("Authorization") String authHeader,
-                                                 @Valid @RequestBody UpdateFieldRequest request) {
+    public ProfileResponse updateLocationCountry(
+            @RequestHeader("Authorization") String authHeader,
+            @Valid @RequestBody UpdateFieldRequest request
+    ) {
         return profileService.updateLocationCounty(parseAuthHeader(authHeader), request.field());
     }
 
     @PostMapping("/update/location/city")
-    public ProfileResponse updateLocationCity(@RequestHeader("Authorization") String authHeader,
-                                              @Valid @RequestBody UpdateFieldRequest request) {
+    public ProfileResponse updateLocationCity(
+            @RequestHeader("Authorization") String authHeader,
+            @Valid @RequestBody UpdateFieldRequest request
+    ) {
         return profileService.updateLocationCity(parseAuthHeader(authHeader), request.field());
     }
 

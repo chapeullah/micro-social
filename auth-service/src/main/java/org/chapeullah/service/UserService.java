@@ -4,7 +4,7 @@ import org.chapeullah.dto.UserResponse;
 import org.chapeullah.entity.User;
 import org.chapeullah.exception.DuplicateUserException;
 import org.chapeullah.exception.InvalidCredentialsException;
-import org.chapeullah.exception.InvalidJwtTokenException;
+import org.chapeullah.exception.InvalidAccessTokenException;
 import org.chapeullah.infrastructure.kafka.EventsProducer;
 import org.chapeullah.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,7 +41,7 @@ public class UserService {
         String passwordHash = passwordEncoder.encode(password);
         User user = userRepository.save(new User(email, passwordHash));
         eventsProducer.userRegistered(user.getId(), user.getRegisterDate());
-        return UserResponse.from(user, jwtService.generateJwtToken(user.getId()));
+        return UserResponse.from(user, jwtService.generateAccessToken(user.getId()));
     }
 
     @Transactional
@@ -51,12 +51,12 @@ public class UserService {
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             throw new InvalidCredentialsException("invalid email or password");
         }
-        return UserResponse.from(user, jwtService.generateJwtToken(user.getId()));
+        return UserResponse.from(user, jwtService.generateAccessToken(user.getId()));
     }
 
     @Transactional
     public void changePassword(
-            String jwtToken,
+            String accessToken,
             String oldPassword,
             String newPassword
     ) {
@@ -64,8 +64,8 @@ public class UserService {
             throw new InvalidCredentialsException("new password must be at least 12 characters long");
         }
         User user = userRepository
-                .findById(jwtService.validateAndExtractUserId(jwtToken))
-                .orElseThrow(() -> new InvalidJwtTokenException("invalid jwt token"));
+                .findById(jwtService.validateAndExtractUserId(accessToken))
+                .orElseThrow(() -> new InvalidAccessTokenException("invalid access token"));
         if (oldPassword.length() < 12 || !passwordEncoder.matches(oldPassword, user.getPasswordHash())) {
             throw new InvalidCredentialsException("old password does not match");
         }
@@ -80,13 +80,13 @@ public class UserService {
 
     @Transactional
     public void changeEmail(
-            String jwtToken,
+            String accessToken,
             String newEmail,
             String password
     ) {
         User user = userRepository
-                .findById(jwtService.validateAndExtractUserId(jwtToken))
-                .orElseThrow(() -> new InvalidJwtTokenException("invalid jwt token"));
+                .findById(jwtService.validateAndExtractUserId(accessToken))
+                .orElseThrow(() -> new InvalidAccessTokenException("invalid access token"));
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             throw new InvalidCredentialsException("invalid password");
         }

@@ -4,10 +4,7 @@ import jakarta.validation.Valid;
 import org.chapeullah.dto.ChangeEmailRequest;
 import org.chapeullah.dto.ChangePasswordRequest;
 import org.chapeullah.service.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth/user/credentials")
@@ -21,10 +18,11 @@ public class CredentialsController {
 
     @PostMapping("/change/password")
     public void changePassword(
+            @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody ChangePasswordRequest changePasswordRequest
     ) {
         userService.changePassword(
-                changePasswordRequest.jwtToken(),
+                UserController.parseAuthHeader(authHeader),
                 changePasswordRequest.oldPassword(),
                 changePasswordRequest.newPassword()
         );
@@ -32,10 +30,11 @@ public class CredentialsController {
 
     @PostMapping("/change/email")
     public void changeEmail(
+            @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody ChangeEmailRequest changeEmailRequest
     ) {
         userService.changeEmail(
-                changeEmailRequest.jwtToken(),
+                UserController.parseAuthHeader(authHeader),
                 changeEmailRequest.newEmail(),
                 changeEmailRequest.password()
         );
