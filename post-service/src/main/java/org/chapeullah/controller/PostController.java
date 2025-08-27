@@ -1,14 +1,14 @@
 package org.chapeullah.controller;
 
 import jakarta.validation.Valid;
-import org.chapeullah.dto.CreatePostRequest;
+import org.chapeullah.dto.PostRequest;
 import org.chapeullah.dto.PostResponse;
 import org.chapeullah.exception.InvalidAccessTokenException;
 import org.chapeullah.service.PostService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/posts")
+@RequestMapping("/api/post")
 public class PostController {
 
     private final PostService postService;
@@ -20,7 +20,7 @@ public class PostController {
     @PostMapping("/create")
     public PostResponse createPost(
             @RequestHeader("Authorization") String accessToken,
-            @Valid @RequestBody CreatePostRequest request
+            @Valid @RequestBody PostRequest request
     ) {
         return postService.createPost(
                 parseAuthHeader(accessToken),
@@ -28,11 +28,30 @@ public class PostController {
         );
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{postId}")
+    public PostResponse deletePost(
+            @RequestHeader("Authorization") String accessToken,
+            @PathVariable Long postId
+    ) {
+        return postService.deletePost(accessToken, postId);
+    }
 
     @GetMapping("/get/{postId}")
     public PostResponse getPost(@PathVariable Long postId) {
         return postService.getPost(postId);
+    }
+
+    @PatchMapping("/update/{postId}")
+    public PostResponse updatePost(
+            @RequestHeader("Authorization") String accessToken,
+            @PathVariable Long postId,
+            @RequestBody PostRequest request
+    ) {
+        return postService.updatePost(
+                accessToken,
+                postId,
+                request.content()
+        );
     }
 
     public static String parseAuthHeader(String authHeader) {

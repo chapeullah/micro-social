@@ -6,7 +6,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 
 public record ProfileResponse(
-        Integer userId,
         String username,
         Instant registeredAt,
         LocalDate birthday,
@@ -15,7 +14,6 @@ public record ProfileResponse(
 ) {
     public static ProfileResponse from(Profile profile) {
         return new ProfileResponse(
-                profile.getUserId(),
                 profile.getUsername(),
                 profile.getRegisteredAt(),
                 profile.getBirthday(),

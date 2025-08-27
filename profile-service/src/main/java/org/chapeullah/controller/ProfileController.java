@@ -23,7 +23,7 @@ public class ProfileController {
         return profileService.getProfileResponseByJwt(parseAuthHeader(authHeader));
     }
 
-    @PostMapping("/change/username")
+    @PatchMapping("/update/username")
     public ProfileResponse updateUsername(
             @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody UpdateUsernameRequest request
@@ -31,7 +31,7 @@ public class ProfileController {
         return profileService.updateUsername(parseAuthHeader(authHeader), request.username());
     }
 
-    @PostMapping("/change/birthday")
+    @PatchMapping("/update/birthday")
     public ProfileResponse updateBirthday(
             @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody UpdateBirthdayRequest request
@@ -39,7 +39,7 @@ public class ProfileController {
         return profileService.updateBirthday(parseAuthHeader(authHeader), request.birthday());
     }
 
-    @PostMapping("/change/location/country")
+    @PatchMapping("/update/location/country")
     public ProfileResponse updateLocationCountry(
             @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody UpdateLocationCountryRequest request
@@ -47,7 +47,7 @@ public class ProfileController {
         return profileService.updateLocationCounty(parseAuthHeader(authHeader), request.country());
     }
 
-    @PostMapping("/change/location/city")
+    @PatchMapping("/update/location/city")
     public ProfileResponse updateLocationCity(
             @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody UpdateLocationCityRequest request

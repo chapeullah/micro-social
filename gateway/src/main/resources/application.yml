@@ -20,7 +20,8 @@ spring:
             - id: posts-service
               uri: http://posts-service:8080
               predicates:
-                - Path=/api/posts/**
+                - Path=/api/post/**
+                - Path=/api/feed/**
 
             - id: notification-service
               uri: http://notification-service:8080

@@ -44,4 +44,8 @@ public class Post {
         return deletedAt == null;
     }
 
+    public boolean isAuthor(Integer userId) {
+        return authorId.equals(userId);
+    }
+
 }

@@ -33,9 +33,7 @@ public class PostService {
 
     @Transactional
     public PostResponse updatePost(String accessToken, Long postId, String content) {
-        Post post = postRepository
-                .findById(postId)
-                .orElseThrow(() -> new PostNotFoundException("post not found"));
+        Post post = getPostById(postId);
         if (post.isDeleted()) {
             throw new PostNotFoundException("post not found");
         }
@@ -49,9 +47,10 @@ public class PostService {
 
     @Transactional
     public PostResponse deletePost(String accessToken, Long postId) {
-        Post post = postRepository
-                .findById(postId)
-                .orElseThrow(() -> new PostNotFoundException("post not found"));
+        Post post = getPostById(postId);
+        if (!post.isAuthor(jwtService.validateAndExtractUserId(accessToken))) {
+            throw new AccessDeniedException("access denied");
+        }
         if (post.isDeleted()) {
             throw new PostNotFoundException("post not found");
         }
@@ -61,13 +60,17 @@ public class PostService {
 
     @Transactional
     public PostResponse getPost(Long postId) {
-        Post post = postRepository
-                .findById(postId)
-                .orElseThrow(() -> new PostNotFoundException("post not found"));
+        Post post = getPostById(postId);
         if (post.isDeleted()) {
             throw new PostNotFoundException("post not found");
         }
         return PostResponse.from(post);
+    }
+
+    private Post getPostById(Long postId) {
+        return postRepository
+                .findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("post not found"));
     }
 
 }
