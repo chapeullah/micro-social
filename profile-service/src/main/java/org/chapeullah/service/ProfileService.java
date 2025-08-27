@@ -2,7 +2,7 @@ package org.chapeullah.service;
 
 import org.chapeullah.dto.ProfileResponse;
 import org.chapeullah.entity.Profile;
-import org.chapeullah.exception.InvalidJwtTokenException;
+import org.chapeullah.exception.InvalidAccessTokenException;
 import org.chapeullah.exception.MissingLocationCountryException;
 import org.chapeullah.repository.ProfileRepository;
 import org.springframework.stereotype.Service;
@@ -75,7 +75,7 @@ public class ProfileService {
     private Profile getProfileByJwt(String jwtToken) {
         return profileRepository
                 .findById(jwtService.validateAndExtractUserId(jwtToken))
-                .orElseThrow(() -> new InvalidJwtTokenException("invalid jwt token"));
+                .orElseThrow(() -> new InvalidAccessTokenException("invalid jwt token"));
     }
 
 }

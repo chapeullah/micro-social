@@ -1,10 +1,8 @@
 package org.chapeullah.controller;
 
 import jakarta.validation.Valid;
-import org.chapeullah.dto.ProfileResponse;
-import org.chapeullah.dto.UpdateBirthdayRequest;
-import org.chapeullah.dto.UpdateFieldRequest;
-import org.chapeullah.exception.InvalidJwtTokenException;
+import org.chapeullah.dto.*;
+import org.chapeullah.exception.InvalidAccessTokenException;
 import org.chapeullah.service.ProfileService;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,15 +23,15 @@ public class ProfileController {
         return profileService.getProfileResponseByJwt(parseAuthHeader(authHeader));
     }
 
-    @PostMapping("/update/username")
+    @PostMapping("/change/username")
     public ProfileResponse updateUsername(
             @RequestHeader("Authorization") String authHeader,
-            @Valid @RequestBody UpdateFieldRequest request
+            @Valid @RequestBody UpdateUsernameRequest request
     ) {
-        return profileService.updateUsername(parseAuthHeader(authHeader), request.field());
+        return profileService.updateUsername(parseAuthHeader(authHeader), request.username());
     }
 
-    @PostMapping("/update/birthday")
+    @PostMapping("/change/birthday")
     public ProfileResponse updateBirthday(
             @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody UpdateBirthdayRequest request
@@ -41,25 +39,25 @@ public class ProfileController {
         return profileService.updateBirthday(parseAuthHeader(authHeader), request.birthday());
     }
 
-    @PostMapping("/update/location/country")
+    @PostMapping("/change/location/country")
     public ProfileResponse updateLocationCountry(
             @RequestHeader("Authorization") String authHeader,
-            @Valid @RequestBody UpdateFieldRequest request
+            @Valid @RequestBody UpdateLocationCountryRequest request
     ) {
-        return profileService.updateLocationCounty(parseAuthHeader(authHeader), request.field());
+        return profileService.updateLocationCounty(parseAuthHeader(authHeader), request.country());
     }
 
-    @PostMapping("/update/location/city")
+    @PostMapping("/change/location/city")
     public ProfileResponse updateLocationCity(
             @RequestHeader("Authorization") String authHeader,
-            @Valid @RequestBody UpdateFieldRequest request
+            @Valid @RequestBody UpdateLocationCityRequest request
     ) {
-        return profileService.updateLocationCity(parseAuthHeader(authHeader), request.field());
+        return profileService.updateLocationCity(parseAuthHeader(authHeader), request.city());
     }
 
     private String parseAuthHeader(String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new InvalidJwtTokenException("missing or invalid Authorization header");
+            throw new InvalidAccessTokenException("missing or invalid Authorization header");
         }
         return authHeader.substring(7);
     }

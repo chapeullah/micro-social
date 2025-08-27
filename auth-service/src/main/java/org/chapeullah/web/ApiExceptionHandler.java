@@ -21,7 +21,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, Object> handleInvalidCredentials(
             InvalidCredentialsException exception
     ) {

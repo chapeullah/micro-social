@@ -36,13 +36,13 @@ services:
 
     depends_on: [postgres, kafka]
 
-  posts-service:
-    build: ./posts-service
+  post-service:
+    build: ./post-service
 
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postsdb
-      SPRING_DATASOURCE_USERNAME: posts_user
-      SPRING_DATASOURCE_PASSWORD: posts_pass
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postdb
+      SPRING_DATASOURCE_USERNAME: post_user
+      SPRING_DATASOURCE_PASSWORD: post_pass
 
     depends_on: [postgres]
 

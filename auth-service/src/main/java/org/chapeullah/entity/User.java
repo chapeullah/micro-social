@@ -8,8 +8,7 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "users")
-@Setter
-@Getter
+@Setter @Getter
 public class User {
 
     @Id
@@ -23,14 +22,13 @@ public class User {
     private String passwordHash;
 
     @Column(nullable = false)
-    private Instant registerDate;
+    private Instant registerDate = Instant.now();
 
     protected User() {}
 
     public User(String email, String passwordHash) {
         this.email = email;
         this.passwordHash = passwordHash;
-        this.registerDate = Instant.now();
     }
 
 }

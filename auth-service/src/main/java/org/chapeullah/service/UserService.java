@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -93,4 +94,5 @@ public class UserService {
         user.setEmail(newEmail);
         userRepository.save(user);
     }
+
 }

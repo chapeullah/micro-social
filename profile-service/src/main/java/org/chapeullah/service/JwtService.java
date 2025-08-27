@@ -3,7 +3,7 @@ package org.chapeullah.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.chapeullah.exception.InvalidJwtTokenException;
+import org.chapeullah.exception.InvalidAccessTokenException;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -22,24 +22,24 @@ public class JwtService {
         this.secretKey = Keys.hmacShaKeyFor(jwtSecretBytes);
     }
 
-    public Integer validateAndExtractUserId(String jwtToken) {
+    public Integer validateAndExtractUserId(String accessToken) {
         try {
-            Claims claims = extractClaims(jwtToken);
+            Claims claims = extractClaims(accessToken);
             if (claims.getExpiration().before(new Date())) {
-                throw new InvalidJwtTokenException("token expired");
+                throw new InvalidAccessTokenException("access token expired");
             }
             return Integer.valueOf(claims.getSubject());
         }
         catch (Exception exception) {
-            throw new InvalidJwtTokenException("invalid jwt token");
+            throw new InvalidAccessTokenException("invalid access token");
         }
     }
 
-    private Claims extractClaims(String jwtToken) {
+    private Claims extractClaims(String accessToken) {
         return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
-                .parseSignedClaims(jwtToken)
+                .parseSignedClaims(accessToken)
                 .getPayload();
     }
 }
