@@ -35,6 +35,18 @@ public class JwtService {
         }
     }
 
+    public void validate(String accessToken) {
+        try {
+            Claims claims = extractClaims(accessToken);
+            if (claims.getExpiration().before(new Date())) {
+                throw new InvalidAccessTokenException("access token expired");
+            }
+        }
+        catch (Exception exception) {
+            throw new InvalidAccessTokenException("invalid access token");
+        }
+    }
+
     private Claims extractClaims(String accessToken) {
         return Jwts.parser()
                 .verifyWith(secretKey)

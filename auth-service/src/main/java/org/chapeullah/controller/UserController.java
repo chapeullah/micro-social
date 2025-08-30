@@ -9,7 +9,7 @@ import org.chapeullah.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth/user")
+@RequestMapping("/api/auth")
 public class UserController {
 
     private final UserService userService;

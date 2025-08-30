@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.chapeullah.dto.PostRequest;
 import org.chapeullah.dto.PostResponse;
 import org.chapeullah.exception.InvalidAccessTokenException;
+import org.chapeullah.service.JwtService;
 import org.chapeullah.service.PostService;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,28 +13,33 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
 
     private final PostService postService;
+    private final JwtService jwtService;
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService, JwtService jwtService) {
         this.postService = postService;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/create")
     public PostResponse createPost(
-            @RequestHeader("Authorization") String accessToken,
+            @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody PostRequest request
     ) {
         return postService.createPost(
-                parseAuthHeader(accessToken),
+                jwtService.validateAndExtractUserId(parseAuthHeader(authHeader)),
                 request.content()
         );
     }
 
     @DeleteMapping("/delete/{postId}")
     public PostResponse deletePost(
-            @RequestHeader("Authorization") String accessToken,
+            @RequestHeader("Authorization") String authHeader,
             @PathVariable Long postId
     ) {
-        return postService.deletePost(accessToken, postId);
+        return postService.deletePost(
+                jwtService.validateAndExtractUserId(parseAuthHeader(authHeader)),
+                postId
+        );
     }
 
     @GetMapping("/get/{postId}")
@@ -43,12 +49,12 @@ public class PostController {
 
     @PatchMapping("/update/{postId}")
     public PostResponse updatePost(
-            @RequestHeader("Authorization") String accessToken,
+            @RequestHeader("Authorization") String authHeader,
             @PathVariable Long postId,
             @RequestBody PostRequest request
     ) {
         return postService.updatePost(
-                accessToken,
+                jwtService.validateAndExtractUserId(parseAuthHeader(authHeader)),
                 postId,
                 request.content()
         );

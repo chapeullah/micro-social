@@ -41,7 +41,7 @@ public class Post {
     }
 
     public boolean isDeleted() {
-        return deletedAt == null;
+        return deletedAt != null;
     }
 
     public boolean isAuthor(Integer userId) {

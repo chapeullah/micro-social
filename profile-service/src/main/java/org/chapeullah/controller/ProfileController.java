@@ -3,6 +3,7 @@ package org.chapeullah.controller;
 import jakarta.validation.Valid;
 import org.chapeullah.dto.*;
 import org.chapeullah.exception.InvalidAccessTokenException;
+import org.chapeullah.service.JwtService;
 import org.chapeullah.service.ProfileService;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,16 +12,20 @@ import org.springframework.web.bind.annotation.*;
 public class ProfileController {
 
     ProfileService profileService;
+    JwtService jwtService;
 
-    public ProfileController(ProfileService profileService) {
+    public ProfileController(ProfileService profileService, JwtService jwtService) {
         this.profileService = profileService;
+        this.jwtService = jwtService;
     }
 
     @GetMapping("/get")
     public ProfileResponse getProfile(
-            @RequestHeader("Authorization") String authHeader
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam(name = "userId") Integer userId
     ) {
-        return profileService.getProfileResponseByJwt(parseAuthHeader(authHeader));
+        jwtService.validate(parseAuthHeader(authHeader));
+        return profileService.getProfileResponseById(userId);
     }
 
     @PatchMapping("/update/username")
@@ -28,7 +33,10 @@ public class ProfileController {
             @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody UpdateUsernameRequest request
     ) {
-        return profileService.updateUsername(parseAuthHeader(authHeader), request.username());
+        return profileService.updateUsername(
+                jwtService.validateAndExtractUserId(parseAuthHeader(authHeader)),
+                request.username()
+        );
     }
 
     @PatchMapping("/update/birthday")
@@ -36,7 +44,10 @@ public class ProfileController {
             @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody UpdateBirthdayRequest request
     ) {
-        return profileService.updateBirthday(parseAuthHeader(authHeader), request.birthday());
+        return profileService.updateBirthday(
+                jwtService.validateAndExtractUserId(parseAuthHeader(authHeader)),
+                request.birthday()
+        );
     }
 
     @PatchMapping("/update/location/country")
@@ -44,7 +55,10 @@ public class ProfileController {
             @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody UpdateLocationCountryRequest request
     ) {
-        return profileService.updateLocationCounty(parseAuthHeader(authHeader), request.country());
+        return profileService.updateLocationCounty(
+                jwtService.validateAndExtractUserId(parseAuthHeader(authHeader)),
+                request.country()
+        );
     }
 
     @PatchMapping("/update/location/city")
@@ -52,7 +66,10 @@ public class ProfileController {
             @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody UpdateLocationCityRequest request
     ) {
-        return profileService.updateLocationCity(parseAuthHeader(authHeader), request.city());
+        return profileService.updateLocationCity(
+                jwtService.validateAndExtractUserId(parseAuthHeader(authHeader)),
+                request.city()
+        );
     }
 
     private String parseAuthHeader(String authHeader) {

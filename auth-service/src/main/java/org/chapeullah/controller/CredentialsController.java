@@ -7,7 +7,7 @@ import org.chapeullah.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth/user/credentials")
+@RequestMapping("/api/user")
 public class CredentialsController {
 
     private final UserService userService;
@@ -16,8 +16,8 @@ public class CredentialsController {
         this.userService = userService;
     }
 
-    @PostMapping("/change/password")
-    public void changePassword(
+    @PatchMapping("/credentials/update/password")
+    public void updatePassword(
             @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody ChangePasswordRequest changePasswordRequest
     ) {
@@ -28,8 +28,8 @@ public class CredentialsController {
         );
     }
 
-    @PostMapping("/change/email")
-    public void changeEmail(
+    @PatchMapping("/credentials/update/email")
+    public void updateEmail(
             @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody ChangeEmailRequest changeEmailRequest
     ) {

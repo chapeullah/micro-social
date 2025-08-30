@@ -14,30 +14,27 @@ import java.time.Instant;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final JwtService jwtService;
 
     public PostService(
-            PostRepository postRepository,
-            JwtService jwtService
+            PostRepository postRepository
     ) {
         this.postRepository = postRepository;
-        this.jwtService = jwtService;
     }
 
     @Transactional
-    public PostResponse createPost(String accessToken, String content) {
-        Post post = new Post(jwtService.validateAndExtractUserId(accessToken), content);
+    public PostResponse createPost(Integer userId, String content) {
+        Post post = new Post(userId, content);
         postRepository.save(post);
         return PostResponse.from(post);
     }
 
     @Transactional
-    public PostResponse updatePost(String accessToken, Long postId, String content) {
+    public PostResponse updatePost(Integer userId, Long postId, String content) {
         Post post = getPostById(postId);
         if (post.isDeleted()) {
             throw new PostNotFoundException("post not found");
         }
-        if (!post.getAuthorId().equals(jwtService.validateAndExtractUserId(accessToken))) {
+        if (!post.getAuthorId().equals(userId)) {
             throw new AccessDeniedException("access denied");
         }
         post.setContent(content);
@@ -46,9 +43,9 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse deletePost(String accessToken, Long postId) {
+    public PostResponse deletePost(Integer userId, Long postId) {
         Post post = getPostById(postId);
-        if (!post.isAuthor(jwtService.validateAndExtractUserId(accessToken))) {
+        if (!post.isAuthor(userId)) {
             throw new AccessDeniedException("access denied");
         }
         if (post.isDeleted()) {

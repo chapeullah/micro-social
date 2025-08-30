@@ -2,6 +2,7 @@ package org.chapeullah.web;
 
 import org.chapeullah.exception.InvalidAccessTokenException;
 import org.chapeullah.exception.MissingLocationCountryException;
+import org.chapeullah.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -24,6 +25,14 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public Map<String, Object> handleMissingLocationCountry(
             MissingLocationCountryException exception
+    ) {
+        return Map.of("message", exception.getMessage());
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, Object> handleUserNotFound(
+            UserNotFoundException exception
     ) {
         return Map.of("message", exception.getMessage());
     }
