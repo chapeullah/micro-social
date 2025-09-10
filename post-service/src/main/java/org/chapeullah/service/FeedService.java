@@ -38,16 +38,16 @@ public class FeedService {
             );
         }
         boolean hasMore = posts.size() > size;
+        String nextCursor = null;
         if (hasMore) {
             posts = posts.subList(0, size);
         }
         List<PostResponse> postsR = posts.stream()
                 .map(PostResponse::from)
                 .toList();
-        String nextCursor = null;
         if (!postsR.isEmpty()) {
             PostResponse last = postsR.get(postsR.size() - 1);
-            nextCursor = CursorUtil.encode(last.createdAt(), last.postId());
+            nextCursor = (hasMore) ? CursorUtil.encode(last.createdAt(), last.postId()) : null;
         }
         return new FeedResponse(postsR, nextCursor, hasMore);
     }

@@ -2,7 +2,7 @@ services:
   gateway:
     build: ./gateway
     ports: ["8080:8080"]
-    depends_on: [auth-service, profile-service, post-service, notification-service]
+    depends_on: [auth-service, profile-service, post-service, notification-service, social-service]
 
   auth-service:
     build: ./auth-service
@@ -35,6 +35,9 @@ services:
       JWT_SECRET: ${JWT_SECRET}
 
     depends_on: [postgres, kafka]
+
+  social-service:
+    build: ./social-service
 
   post-service:
     build: ./post-service

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/profile")
-public class ProfileController {
+public final class ProfileController {
 
     ProfileService profileService;
     JwtService jwtService;

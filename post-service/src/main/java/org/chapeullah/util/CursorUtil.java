@@ -19,7 +19,7 @@ public class CursorUtil {
     }
 
     public static Optional<Cursor> decode(String cursor) {
-        if (cursor.isBlank()) {
+        if (cursor == null || cursor.isBlank()) {
             return Optional.empty();
         }
         String raw = new String(Base64.getUrlDecoder().decode(cursor), StandardCharsets.UTF_8);

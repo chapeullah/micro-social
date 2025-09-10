@@ -26,3 +26,8 @@ spring:
               uri: http://notification-service:8080
               predicates:
                 - Path=/api/notification/**
+
+            - id: social-service
+              uri: http://social-service:8080
+              predicates:
+                - Path=/api/social/**
