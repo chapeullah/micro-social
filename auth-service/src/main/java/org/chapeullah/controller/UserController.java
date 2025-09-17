@@ -6,6 +6,7 @@ import org.chapeullah.dto.RegisterRequest;
 import org.chapeullah.dto.UserResponse;
 import org.chapeullah.exception.InvalidAccessTokenException;
 import org.chapeullah.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +20,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
     public UserResponse register(
             @Valid @RequestBody RegisterRequest registerRequest
     ) {
@@ -29,6 +31,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
     public UserResponse login(
             @Valid @RequestBody LoginRequest loginRequest
     ) {

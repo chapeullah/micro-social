@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/profile")
 public final class ProfileController {
 
-    ProfileService profileService;
-    JwtService jwtService;
+    private final ProfileService profileService;
+    private final JwtService jwtService;
 
     public ProfileController(ProfileService profileService, JwtService jwtService) {
         this.profileService = profileService;

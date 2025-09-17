@@ -39,6 +39,14 @@ services:
   social-service:
     build: ./social-service
 
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/socialdb
+      SPRING_DATASOURCE_USERNAME: social_user
+      SPRING_DATASOURCE_PASSWORD: social_pass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+      JWT_SECRET: ${JWT_SECRET}
+
   post-service:
     build: ./post-service
 

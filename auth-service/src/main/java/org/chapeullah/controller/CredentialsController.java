@@ -16,6 +16,11 @@ public class CredentialsController {
         this.userService = userService;
     }
 
+    @GetMapping("/exist/{id}")
+    public void userExist(@PathVariable Integer id) {
+        userService.userExist(id);
+    }
+
     @PatchMapping("/credentials/update/password")
     public void updatePassword(
             @RequestHeader("Authorization") String authHeader,

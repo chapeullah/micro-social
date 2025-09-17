@@ -1,0 +1,57 @@
+package org.chapeullah.service;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import org.chapeullah.exception.InvalidAccessTokenException;
+import org.springframework.stereotype.Service;
+
+import javax.crypto.SecretKey;
+import java.util.Base64;
+import java.util.Date;
+
+@Service
+public class JwtService {
+
+    private static final String JWT_SECRET = System.getenv("JWT_SECRET");
+
+    private final SecretKey secretKey;
+
+    public JwtService() {
+        byte[] jwtSecretBytes = Base64.getDecoder().decode(JWT_SECRET);
+        this.secretKey = Keys.hmacShaKeyFor(jwtSecretBytes);
+    }
+
+    public Integer validateAndExtractUserId(String accessToken) {
+        try {
+            Claims claims = extractClaims(accessToken);
+            if (claims.getExpiration().before(new Date())) {
+                throw new InvalidAccessTokenException("access token expired");
+            }
+            return Integer.valueOf(claims.getSubject());
+        }
+        catch (Exception exception) {
+            throw new InvalidAccessTokenException("invalid access token");
+        }
+    }
+
+    public void validate(String accessToken) {
+        try {
+            Claims claims = extractClaims(accessToken);
+            if (claims.getExpiration().before(new Date())) {
+                throw new InvalidAccessTokenException("access token expired");
+            }
+        }
+        catch (Exception exception) {
+            throw new InvalidAccessTokenException("invalid access token");
+        }
+    }
+
+    private Claims extractClaims(String accessToken) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(accessToken)
+                .getPayload();
+    }
+}

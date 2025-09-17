@@ -5,6 +5,7 @@ import org.chapeullah.entity.User;
 import org.chapeullah.exception.DuplicateUserException;
 import org.chapeullah.exception.InvalidCredentialsException;
 import org.chapeullah.exception.InvalidAccessTokenException;
+import org.chapeullah.exception.UserNotFoundException;
 import org.chapeullah.infrastructure.kafka.EventsProducer;
 import org.chapeullah.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -93,6 +94,14 @@ public class UserService {
         }
         user.setEmail(newEmail);
         userRepository.save(user);
+    }
+
+    public void userExist(
+            Integer id
+    ) {
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException("user not found");
+        }
     }
 
 }
