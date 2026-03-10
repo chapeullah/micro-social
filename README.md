@@ -33,5 +33,4 @@ pet-project, реализующий упрощённый аналог социа
 git clone https://github.com/chapeullah/micro-social.git
 cd micro-social
 
-# поднять всё окружение
 docker-compose up --build
