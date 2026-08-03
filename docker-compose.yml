@@ -75,7 +75,7 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   kafka:
-    image: bitnami/kafka:4.0.0
+    image: soldevelo/kafka:4.0.0
     container_name: kafka
 
     environment:
